@@ -24,121 +24,66 @@ Test the C Program for the desired output.
 # PROGRAM:
 
 ## C Program to create new process using Linux API system calls fork() and getpid() , getppid() and to print process ID and parent Process ID using Linux API system calls
-
 ```
 #include <stdio.h>
-#include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h>
+int main(void)
+{	//variable to store calling function's process id
+	pid_t process_id;
+	//variable to store parent function's process id
+	pid_t p_process_id;
+	//getpid() - will return process id of calling function
+	process_id = getpid();
+	//getppid() - will return process id of parent function
+	p_process_id = getppid();
+	//printing the process ids
 
-int main() {
-    int pid = fork();
-
-    if (pid == 0) { 
-        printf("I am child, my PID is %d\n", getpid()); 
-        printf("My parent PID is: %d\n", getppid()); 
-        sleep(2);
-    } 
-    else { 
-        printf("I am parent, my PID is %d\n", getpid()); 
-        wait(NULL); 
-    }
-
-    return 0;
-}
-
-
-
+//printing the process ids
+	printf("The process id: %d\n",process_id);
+	printf("The process id of parent function: %d\n",p_process_id);
+	return 0; }
 ```
-
-
-
-
 
 
 ##OUTPUT
 
-![image](images2/ex02.1.png)
-
-
-
-
+<img width="535" height="124" alt="Screenshot from 2026-02-06 08-30-41" src="https://github.com/user-attachments/assets/b9ed9d63-22a6-4310-8e34-c3167caf03ee" />
 
 
 ## C Program to execute Linux system commands using Linux API system calls exec() , exit() , wait() family
 ```
-#include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
-
-int main() {
-    int status;
-    
-    printf("Running ps with execl\n");
-    if (fork() == 0) {
-        execl("ps", "ps", "-f", NULL);
-        perror("execl failed");
-        exit(1);
-    }
-    wait(&status);
-    
-    if (WIFEXITED(status)) {
-        printf("Child exited with status: %d\n", WEXITSTATUS(status));
-    } else {
-        printf("Child did not exit successfully\n");
-    }
-    
-    printf("Running ps with execlp (without full path)\n");
-    if (fork() == 0) {
-        execlp("ps", "ps", "-f", NULL);
-        perror("execlp failed");
-        exit(1);
-    }
-    wait(&status);
-    
-    if (WIFEXITED(status)) {
-        printf("Child exited for execlp with status: %d\n", WEXITSTATUS(status));
-    } else {
-        printf("Child did not exit successfully\n");
-    }
-    
-    printf("Done.\n");
-    return 0;
-}
+#include<stdio.h>
+#include<unistd.h>
+#include <sys/types.h>
+int main()
+{       int status;
+        printf("Running ps with execlp\n");
+        execl("ps", "ps", "ax", NULL);
+        wait(&status);
+        if (WIFEXITED(status))
+                printf("child exited with status of %d\n", WEXITSTATUS(status));
+        else
+                puts("child did not exit successfully\n");
+        printf("Done.\n");
+printf("Running ps with execlp. Now with path specified\n");
+        execl("/bin/ps", "ps", "ax", NULL);
+        wait(&status);
+        if (WIFEXITED(status))
+                printf("child exited with status of %d\n", WEXITSTATUS(status));
+        else
+                puts("child did not exit successfully\n");
+        printf("Done.\n");
+        exit(0);}
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ##OUTPUT
 
 
-![image](images2/ex02.2.png)
-
-
-
+<img width="664" height="536" alt="Screenshot from 2026-02-06 08-53-29" src="https://github.com/user-attachments/assets/f65967d6-3ded-42d1-b880-0e6becd9c3ee" />
 
 
 # RESULT:
